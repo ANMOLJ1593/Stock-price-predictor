@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
+import os  # Required for dynamic port binding
 
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ ALPHA_VANTAGE_API_KEY = "HUNPCN7PCXOQX6YN"
 
 def fetch_stock_data(ticker):
     try:
-        url = f"https://www.alphavantage.co/query"
+        url = "https://www.alphavantage.co/query"
         params = {
             "function": "TIME_SERIES_DAILY",
             "symbol": ticker,
@@ -57,7 +58,6 @@ def get_stock_data():
         "Volume": latest_data['Volume']
     })
 
-# Train a simple model based on historical data
 def train_model(stock_data):
     stock_data = stock_data.dropna()
     X = stock_data[['Open', 'High', 'Low', 'Volume']]
@@ -92,8 +92,7 @@ def predict():
 
     return render_template('result.html', prediction=formatted_prediction)
 
-if __name__ == '__main__':
-    app.run(debug=True)
-
+# Final deployment-compatible block
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    port = int(os.environ.get("PORT", 8000))  # Default to port 8000 if not set
+    app.run(host="0.0.0.0", port=port, debug=True)
