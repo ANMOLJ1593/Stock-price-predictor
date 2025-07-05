@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>StockSense | AI-Powered Stock Predictions</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+</head>
+
+<body>
+    <!-- Awareness Pop-up -->
+    <div id="awarenessModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Investment Risk Disclosure</h2>
+            </div>
+            <div class="modal-body">
+                <p>Stock market investments are subject to market risks. Please consider the following before proceeding:</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Only invest what you can afford to lose</li>
+                    <li><i class="fas fa-check-circle"></i> Past performance doesn't guarantee future results</li>
+                    <li><i class="fas fa-check-circle"></i> These predictions are for educational purposes only</li>
+                    <li><i class="fas fa-check-circle"></i> Consult a financial advisor before making decisions</li>
+                </ul>
+                <div class="risk-meter">
+                    <div class="risk-level high-risk"></div>
+                    <div class="risk-labels">
+                        <span>Low Risk</span>
+                        <span>High Risk</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="acceptButton" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> I Understand & Accept Risks
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent" style="display:none;">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <h1>StockSense <span>AI</span></h1>
+            </div>
+            <p class="tagline">AI-powered stock price predictions for smarter investments</p>
+        </header>
+
+        <div class="card prediction-card">
+            <div class="card-header">
+                <h2><i class="fas fa-magic"></i> Prediction Dashboard</h2>
+            </div>
+
+            <div class="card-body">
+                <!-- Stock Selection -->
+                <div class="form-group stock-selector">
+                    <label for="stockSelect"><i class="fas fa-search-dollar"></i> Select Stock</label>
+                    <div class="select-wrapper">
+                        <select id="stockSelect" class="form-control">
+                            <option value="">-- Choose a stock --</option>
+                            <optgroup label="US Stocks">
+                                <option value="AAPL">Apple (AAPL)</option>
+                                <option value="GOOGL">Alphabet (GOOGL)</option>
+                                <option value="AMZN">Amazon (AMZN)</option>
+                                <option value="TSLA">Tesla (TSLA)</option>
+                                <option value="MSFT">Microsoft (MSFT)</option>
+                                <option value="META">Meta (META)</option>
+                                <option value="NVDA">NVIDIA (NVDA)</option>
+                                <option value="JPM">JPMorgan Chase (JPM)</option>
+                                <option value="JNJ">Johnson & Johnson (JNJ)</option>
+                                <option value="V">Visa (V)</option>
+                                <option value="PG">Procter & Gamble (PG)</option>
+                                <option value="MA">Mastercard (MA)</option>
+                                <option value="HD">Home Depot (HD)</option>
+                                <option value="DIS">Walt Disney (DIS)</option>
+                                <option value="ADBE">Adobe (ADBE)</option>
+                                <option value="PFE">Pfizer (PFE)</option>
+                                <option value="NFLX">Netflix (NFLX)</option>
+                                <option value="CRM">Salesforce (CRM)</option>
+                                <option value="PYPL">PayPal (PYPL)</option>
+                                <option value="INTC">Intel (INTC)</option>
+                                <option value="CSCO">Cisco (CSCO)</option>
+                                <option value="PEP">PepsiCo (PEP)</option>
+                                <option value="KO">Coca-Cola (KO)</option>
+                                <option value="WMT">Walmart (WMT)</option>
+                                <option value="MCD">McDonald's (MCD)</option>
+                                <option value="ABBV">AbbVie (ABBV)</option>
+                                <option value="TMO">Thermo Fisher (TMO)</option>
+                                <option value="COST">Costco (COST)</option>
+                                <option value="NKE">Nike (NKE)</option>
+                                <option value="ABT">Abbott Labs (ABT)</option>
+                            </optgroup>
+                            <optgroup label="Indian Stocks">
+                                <option value="INFY.BO">Infosys</option>
+                                <option value="HDFCBANK.BO">HDFC Bank</option>
+                                <option value="TCS.BO">Tata Consultancy</option>
+                                <option value="RELIANCE.BO">Reliance</option>
+                                <option value="HINDUNILVR.BO">Hindustan Unilever</option>
+                                <option value="ITC.BO">ITC Limited</option>
+                                <option value="SBIN.BO">State Bank of India</option>
+                                <option value="BHARTIARTL.BO">Bharti Airtel</option>
+                                <option value="KOTAKBANK.BO">Kotak Mahindra Bank</option>
+                                <option value="LT.BO">Larsen & Toubro</option>
+                                <option value="HCLTECH.BO">HCL Technologies</option>
+                                <option value="BAJFINANCE.BO">Bajaj Finance</option>
+                                <option value="ASIANPAINT.BO">Asian Paints</option>
+                                <option value="MARUTI.BO">Maruti Suzuki</option>
+                                <option value="TITAN.BO">Titan Company</option>
+                                <option value="SUNPHARMA.BO">Sun Pharma</option>
+                                <option value="BAJAJFINSV.BO">Bajaj Finserv</option>
+                                <option value="NTPC.BO">NTPC</option>
+                                <option value="ONGC.BO">ONGC</option>
+                                <option value="WIPRO.BO">Wipro</option>
+                                <option value="ADANIPORTS.BO">Adani Ports</option>
+                                <option value="POWERGRID.BO">Power Grid Corp</option>
+                                <option value="NESTLEIND.BO">Nestle India</option>
+                                <option value="ULTRACEMCO.BO">UltraTech Cement</option>
+                                <option value="AXISBANK.BO">Axis Bank</option>
+                                <option value="TATASTEEL.BO">Tata Steel</option>
+                                <option value="JSWSTEEL.BO">JSW Steel</option>
+                                <option value="HDFCLIFE.BO">HDFC Life Insurance</option>
+                                <option value="DRREDDY.BO">Dr. Reddy's Labs</option>
+                                <option value="CIPLA.BO">Cipla</option>
+                                <option value="UPL.BO">UPL Limited</option>
+                                <option value="GRASIM.BO">Grasim Industries</option>
+                                <option value="DIVISLAB.BO">Divis Laboratories</option>
+                                <option value="VEDL.BO">Vedanta Limited</option>
+                                <option value="HINDZINC.BO">Hindustan Zinc</option>
+                                <option value="BPCL.BO">BPCL</option>
+                                <option value="IOC.BO">Indian Oil Corp</option>
+                                <option value="GAIL.BO">GAIL India</option>
+                                <option value="543257.BO">Indian Railway Finance Corp Ltd</option>
+
+
+                            </optgroup>
+                        </select>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <form action="/predict" method="post" class="prediction-form">
+                    <input type="hidden" id="Ticker" name="Ticker" required>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Open"><i class="fas fa-door-open"></i> Open Price</label>
+                            <div class="input-with-icon">
+                                <span class="currency">₹</span>
+                                <input type="number" id="Open" step="any" name="Open" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="High"><i class="fas fa-arrow-up"></i> High Price</label>
+                            <div class="input-with-icon">
+                                <span class="currency">₹</span>
+                                <input type="number" id="High" step="any" name="High" required placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Low"><i class="fas fa-arrow-down"></i> Low Price</label>
+                            <div class="input-with-icon">
+                                <span class="currency">₹</span>
+                                <input type="number" id="Low" step="any" name="Low" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Volume"><i class="fas fa-chart-bar"></i> Volume</label>
+                            <input type="number" id="Volume" step="any" name="Volume" required placeholder="0">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-predict">
+                        <i class="fas fa-calculator"></i> Predict Future Price
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <p><i class="fas fa-info-circle"></i> Predictions are based on historical data and AI algorithms. Not financial advice.</p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchStockData(ticker) {
+            try {
+                // Show loading state
+                document.querySelector('.prediction-form button').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading Data...';
+                document.querySelector('.prediction-form button').disabled = true;
+
+                const response = await fetch(`/get_stock_data?ticker=${ticker}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                document.getElementById('Open').value = data.Open;
+                document.getElementById('High').value = data.High;
+                document.getElementById('Low').value = data.Low;
+                document.getElementById('Volume').value = data.Volume;
+                document.getElementById('Ticker').value = ticker;
+
+                // Restore button state
+                document.querySelector('.prediction-form button').innerHTML = '<i class="fas fa-calculator"></i> Predict Future Price';
+                document.querySelector('.prediction-form button').disabled = false;
+
+                // Add visual feedback
+                const card = document.querySelector('.prediction-card');
+                card.classList.add('data-loaded');
+                setTimeout(() => card.classList.remove('data-loaded'), 1000);
+
+            } catch (error) {
+                console.error('Error fetching stock data:', error);
+                document.querySelector('.prediction-form button').innerHTML = '<i class="fas fa-calculator"></i> Predict Future Price';
+                document.querySelector('.prediction-form button').disabled = false;
+                alert('Failed to fetch stock data. Please try again.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('awarenessModal');
+            const mainContent = document.getElementById('mainContent');
+            const acceptButton = document.getElementById('acceptButton');
+
+            // Show modal immediately
+            modal.style.display = 'flex';
+
+            acceptButton.addEventListener('click', function() {
+                modal.style.display = 'none';
+                mainContent.style.display = 'block';
+
+                // Add animation to main content
+                mainContent.style.animation = 'fadeIn 0.5s ease-out';
+
+                // Store acceptance in localStorage
+                localStorage.setItem('riskAccepted', 'true');
+            });
+
+            // Check if risk was previously accepted
+            if (localStorage.getItem('riskAccepted') === 'true') {
+                modal.style.display = 'none';
+                mainContent.style.display = 'block';
+            }
+
+            const stockSelect = document.getElementById('stockSelect');
+
+            stockSelect.addEventListener('change', function() {
+                const selectedStock = stockSelect.value;
+                if (selectedStock) {
+                    fetchStockData(selectedStock);
+                } else {
+                    // Clear fields if no stock selected
+                    ['Open', 'High', 'Low', 'Volume', 'Ticker'].forEach(id => {
+                        document.getElementById(id).value = '';
+                    });
+                }
+            });
+
+            // Add animation to form inputs on focus
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                input.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
